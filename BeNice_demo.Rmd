@@ -14,10 +14,13 @@ output:
         html_document:
                 theme: spacelab
                 highlight: tango
+                css: BeNice.css
                 toc: true
                 toc_float: true
                 fig_captions: yes
                 code_folding: hide
+fontsize: 12pt
+geometry: margin=4in
 ---
 
 ```{r global_options, include=FALSE}
