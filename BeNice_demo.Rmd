@@ -1,0 +1,262 @@
+---
+title: "BeNice demo"
+author: 
+- "Pedro Cardoso-Leite"
+- "Albert Buchard"
+date: "2 Feb 2016"
+tags: [nothing, nothingness]
+abstract:
+        This is the abstract.
+        
+        It has 2 paragraphs.
+
+output:
+        html_document:
+                theme: spacelab
+                highlight: tango
+                toc: true
+                toc_float: true
+                fig_captions: yes
+                code_folding: hide
+---
+
+```{r global_options, include=FALSE}
+# change knitr's default settings
+knitr::opts_chunk$set(fig.width=5, fig.height=5, fig.path='figs/',
+                      echo=FALSE, warning=FALSE, message=FALSE)
+
+# themes:  http://bootswatch.com/
+#  not all themes are valid.
+# “default”, “cerulean”, “journal”, “flatly”, “readable”, “spacelab”, “united”, “cosmo”
+
+# spacelab
+# readable
+# cosmo
+
+# theme specifies the Bootstrap theme to use for the page (themes are drawn from the Bootswatch theme library). Valid themes include "default", "cerulean", "journal", "flatly", "readable", "spacelab", "united", "cosmo", "lumen", "paper", "sandstone", "simplex", and "yeti". Pass null for no theme (in this case you can use the css parameter to add your own styles).
+# 
+# highlight specifies the syntax highlighting style. Supported styles include "default", "tango", "pygments", "kate", "monochrome", "espresso", "zenburn", "haddock", and "textmate". Pass null to prevent syntax highlighting.
+
+# great resource:
+# http://rmarkdown.rstudio.com/html_document_format.html
+```
+
+
+
+
+
+
+```{r functions, include=FALSE}
+# A function for captioning and referencing figures and tables
+# from http://stackoverflow.com/questions/13848137/figure-captions-references-using-knitr-and-markdown-to-html
+figM <- local({
+    i <- 0
+    ref <- list()
+    list(
+        cap=function(refName, text) {
+            i <<- i + 1
+            ref[[refName]] <<- i
+            paste("**Figure ", i, ":** ", text, sep="")
+        },
+        ref=function(refName) {
+            ref[[refName]]
+        })
+})
+
+
+tabM <- local({
+    i <- 0
+    ref <- list()
+    list(
+        cap=function(refName, text) {
+            i <<- i + 1
+            ref[[refName]] <<- i
+            paste("**Table ", i, ":** ", text, sep="")
+        },
+        ref=function(refName) {
+            ref[[refName]]
+        })
+})
+
+# examples are shown below
+```
+
+# print function
+```{r echo = F}
+source('printTest.R', verbose = F)
+```
+
+```{r loadStuff, echo = F, include=F}
+
+
+
+library(ggplot2)
+
+
+
+library(texreg)
+# library(xtable)
+
+
+# http://yihui.name/printr/
+# https://github.com/yihui/printr
+# install.packages(
+#   'printr',
+#   type = 'source',
+#   repos = c('http://yihui.name/xran', 'http://cran.rstudio.com')
+# )
+library(printr)
+summary(cars)
+```
+
+
+
+
+
+
+
+
+
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+
+
+```{r, echo=T}
+x <- seq(1, 10, 1)
+```
+
+
+
+
+
+
+
+
+
+
+```{r fig_cars, echo=FALSE, fig.cap=figM$cap("fig_cars", "Here you see some interesting stuff about cars and such."), fig.align='center'}
+plot(cars)
+```
+
+
+
+```{r tab1, echo=FALSE, fig.cap=tabM$cap("tab1", "Here you see some interesting stuff about cars and such."), fig.align='center'}
+# plot(cars)
+# library(texreg)
+# htmlreg(table(rbinom(10, 1, .5)))
+
+table(rbinom(10, 1, .5))
+
+
+```
+
+
+
+```{r tab2, echo=FALSE, fig.cap=tabM$cap("tab2", "Here you see some interesting stuff about cars and such."), fig.align='center'}
+
+t1 <- table(rbinom(10, 1, .5))
+
+library(xtable)
+# fm3.table <- xtable(glm.fit)
+fm3.table <- xtable(t1)
+# Coefficients
+print(fm3.table, type = "html")
+```
+
+
+
+```{r tab3, echo=FALSE, fig.cap=tabM$cap("tab3", "Here you see some interesting stuff about cars and such."), fig.align='center'}
+plot(cars)
+```
+
+
+
+
+
+```{r fig_cars2, echo=FALSE, fig.cap=figM$cap("fig_cars2", "Here you see some interesting stuff about cars and such."), fig.align='center'}
+plot(cars)
+```
+
+
+
+
+
+
+
+```{r}
+help.search('contourplot')
+```
+
+
+
+## Referencing to figure or tables:
+What you always wanted to know about cars is shown in table `r tabM$ref("tab1")` or figure `r figM$ref("fig_cars2")`
+
+
+
+## GLM output
+```{r echo=T}
+cuse <- read.table("http://data.princeton.edu/wws509/datasets/cuse.dat", header=TRUE)
+lrfit <- glm( cbind(using, notUsing) ~ age + education + wantsMore , family = binomial, data=cuse)
+```
+
+
+```{r glm_fit, echo=FALSE, fig.cap=tabM$cap("glm_fit", "Output of glm."), fig.align='center'}
+lrfit
+```
+
+
+
+
+```{r glm_fit_summary, echo=FALSE, fig.cap=tabM$cap("glm_fit_summary", "Summary of glm output."), fig.align='center'}
+summary(lrfit)
+```
+
+
+
+
+```{r glm_fit_texreg, echo=FALSE, fig.cap=tabM$cap("glm_fit_texreg", "Summary of glm output."), fig.align='center', results='asis'}
+htmlreg(lrfit,single.row=TRUE)
+```
+
+
+```{r glm_fit_xtable, echo=FALSE, fig.cap=tabM$cap("glm_fit_xtable", "Summary of glm output."), fig.align='center', results='asis'}
+library(xtable)
+fm3.table <- xtable(lrfit)
+# Coefficients
+print(fm3.table, type = "html")
+# Analysis of variance.
+print(xtable(anova(lrfit)), type = "html")
+```
+
+
+
+
+When considering all the coefficients from our glm we observe that none of them are significant (all p > `r paste(pBiggerThan(summary(lrfit)$coefficients[-1,4]))`). 
+
+
+
+
+
+
+```{r}
+x <- rnorm(100, 110, 10)
+y <- x+rnorm(100, 10, 10)
+
+cxy <- cor.test(x,y)
+txy <- t.test(x,y, paired = T)
+```
+
+We observe that the average value of x was `r paste(print_sem(x))` and the average of y was `r paste(print_sem(x))`. This difference was not significant `r paste( print.t.test(txy, units="ms"))`.
+
+
+We observed however a significant correlation between x and y `r paste(print.cor.test(cxy))`.
+
+
+
+
+
+
