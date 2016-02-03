@@ -256,9 +256,17 @@ Requires some css code to make it look nice.
 
 #### ktable
 ```{r LvsN_glm2, echo=FALSE}
+library(xtable)
+lrfit.table <- xtable(lrfit)
 
-knitr::kable(fm3.table, caption = tabM$cap("LvsN_glm2","ktable output."))
+knitr::kable(lrfit.table,
+             digits = 2,
+             caption = tabM$cap("LvsN_glm2","ktable output."))
+
+##
 ```
+
+
 Probably the best off the shelf solution.
 
 
