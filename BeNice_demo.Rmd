@@ -195,16 +195,18 @@ help.search('contourplot')
 
 
 
-## Referencing to figure or tables:
+## Referencing to figure or table {#identifier .class1 .class2 key=value key=value}
 What you always wanted to know about cars is shown in table `r tabM$ref("tab1")` or figure `r figM$ref("fig_cars2")`
 
 
-
-## GLM output
+## Tables
+### GLM output
 ```{r echo=T}
 cuse <- read.table("http://data.princeton.edu/wws509/datasets/cuse.dat", header=TRUE)
 lrfit <- glm( cbind(using, notUsing) ~ age + education + wantsMore , family = binomial, data=cuse)
 ```
+
+#### no formatting
 
 
 ```{r glm_fit, echo=FALSE, fig.cap=tabM$cap("glm_fit", "Output of glm."), fig.align='center'}
@@ -221,19 +223,52 @@ summary(lrfit)
 
 
 
-```{r glm_fit_texreg, echo=FALSE, fig.cap=tabM$cap("glm_fit_texreg", "Summary of glm output."), fig.align='center', results='asis'}
-htmlreg(lrfit,single.row=TRUE)
+
+
+
+
+
+
+
+#### texreg
+```{r glm_fit_texreg, echo=FALSE, results='asis'}
+htmlreg(lrfit,single.row=TRUE, caption = tabM$cap("glm_fit_texreg", "texreg table output."))
 ```
+Looks good but not enough information.
 
 
-```{r glm_fit_xtable, echo=FALSE, fig.cap=tabM$cap("glm_fit_xtable", "Summary of glm output."), fig.align='center', results='asis'}
+
+
+#### xtable
+```{r LvsN_glm, echo=FALSE, results="asis"}
 library(xtable)
-fm3.table <- xtable(lrfit)
+fm3.table <- xtable(lrfit, caption = tabM$cap("LvsN_glm","xtable output."))
+
 # Coefficients
 print(fm3.table, type = "html")
+
 # Analysis of variance.
-print(xtable(anova(lrfit)), type = "html")
+# print(xtable(anova(lrfit)), type = "html")
 ```
+
+Requires some css code to make it look nice.
+
+
+#### ktable
+```{r LvsN_glm2, echo=FALSE}
+
+knitr::kable(fm3.table, caption = tabM$cap("LvsN_glm2","ktable output."))
+```
+Probably the best off the shelf solution.
+
+
+
+
+
+
+## Tests
+
+
 
 
 
