@@ -1,4 +1,5 @@
-
+# rename variables for greater clarity
+# xtable.glm()
 
 # - add variable name and units (age = 12+-sd years)
 print_sem <- function(X, digits = 2){
@@ -212,6 +213,34 @@ beta.print <- function(beta.fit){
         names(aa) <- c("coef.", "se.", "z", "p", " ")
         xtable(aa)       
 }
+
+
+lm.table <- function(lm.fit, remove.intercept = T){
+        require(xtable)
+        aa <- as.data.frame(summary(lm.fit)$coefficients)
+        if (remove.intercept){
+                aa <- aa[-1,]
+        }
+        aa$stars <- p2stars(aa$`Pr(>|t|)`)
+        names(aa) <- c("coef.", "se.", "t", "p", " ")
+        xtable(aa)       
+}
+
+
+
+
+glm.table <- function(lm.fit, remove.intercept = T){
+        require(xtable)
+        aa <- as.data.frame(summary(lm.fit)$coefficients)
+        if (remove.intercept){
+                aa <- aa[-1,]
+        }
+        aa$stars <- p2stars(aa$`Pr(>|z|)`)
+        names(aa) <- c("coef.", "se.", "z", "p", " ")
+        xtable(aa)       
+}
+
+
 
 
 
