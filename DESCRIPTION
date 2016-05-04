@@ -1,0 +1,30 @@
+Package: BeNice
+Version: 0.1
+Date: 2016-05-05
+Title: BeNice Package
+Depends:
+    R (>= 3.2),
+    R6,
+    grid,
+    gridExtra,
+    RGraphics,
+    ggplot2,
+    psych,
+    plyr,
+    WriteXLS,
+    gridExtra,
+    lubridate,
+    gtools
+Version: 0.02
+Date: 2016-03-29
+Authors@R: c(person("Pedro", "Cardoso-Leite", role = c("aut", "cre")),
+                person("Albert", "Buchard", role = c("aut", "cre"),
+		     email = "albert.buchard at epfl.ch"))
+Author: Pedro Cardoso-Leite [aut, cre],
+        Albert Buchard [aut, cre]
+Maintainer: Pedro Cardoso-Leite <pedroCardoso@magicmail.com>
+Description: Set of R functions to improve Rmd outputs and default figures.
+URL: http://www.notyet.com
+License: MIT
+LazyData: TRUE
+RoxygenNote: 5.0.1
