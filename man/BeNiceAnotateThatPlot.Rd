@@ -16,7 +16,7 @@ Takes an already built ggplot and add text to the right of the main plot, or as 
 # Dummy data generation
 x = runif(9, 0, 125)
 data = as.data.frame(x)
-data$y = runif(9, 0, 125)
+data$y = runif(9, 0, 125) 
 
 # Dummy plot generation
 superPlot = ggplot(data, aes(x, y)) +
