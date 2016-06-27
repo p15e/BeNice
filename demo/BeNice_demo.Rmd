@@ -1,0 +1,445 @@
+---
+title: "BeNice demo"
+author: 
+- "Pedro Cardoso-Leite"
+- "Albert Buchard"
+date: "2 Feb 2016"
+tags: [nothing, nothingness]
+abstract:
+        This is the abstract.
+        
+        It has 2 paragraphs.
+
+output:
+        html_document:
+                theme: spacelab
+                highlight: tango
+                css: BeNice.css
+                toc: true
+                toc_float: true
+                fig_captions: yes
+                code_folding: hide
+fontsize: 12pt
+geometry: margin=4in
+---
+
+```{r global_options, include=FALSE}
+# change knitr's default settings
+knitr::opts_chunk$set(fig.width=5, fig.height=5, fig.path='figs/',
+                      echo=FALSE, warning=FALSE, message=FALSE)
+
+# themes:  http://bootswatch.com/
+#  not all themes are valid.
+# “default”, “cerulean”, “journal”, “flatly”, “readable”, “spacelab”, “united”, “cosmo”
+
+# spacelab
+# readable
+# cosmo
+
+# theme specifies the Bootstrap theme to use for the page (themes are drawn from the Bootswatch theme library). Valid themes include "default", "cerulean", "journal", "flatly", "readable", "spacelab", "united", "cosmo", "lumen", "paper", "sandstone", "simplex", and "yeti". Pass null for no theme (in this case you can use the css parameter to add your own styles).
+# 
+# highlight specifies the syntax highlighting style. Supported styles include "default", "tango", "pygments", "kate", "monochrome", "espresso", "zenburn", "haddock", and "textmate". Pass null to prevent syntax highlighting.
+
+# great resource:
+# http://rmarkdown.rstudio.com/html_document_format.html
+```
+
+
+
+
+
+
+```{r functions, include=FALSE}
+# A function for captioning and referencing figures and tables
+# from http://stackoverflow.com/questions/13848137/figure-captions-references-using-knitr-and-markdown-to-html
+figM <- local({
+    i <- 0
+    ref <- list()
+    list(
+        cap=function(refName, text) {
+            i <<- i + 1
+            ref[[refName]] <<- i
+            paste("**Figure ", i, ":** ", text, sep="")
+        },
+        ref=function(refName) {
+            ref[[refName]]
+        })
+})
+
+
+tabM <- local({
+    i <- 0
+    ref <- list()
+    list(
+        cap=function(refName, text) {
+            i <<- i + 1
+            ref[[refName]] <<- i
+            paste("**Table ", i, ":** ", text, sep="")
+        },
+        ref=function(refName) {
+            ref[[refName]]
+        })
+})
+
+# examples are shown below
+```
+
+# print function
+```{r echo = F}
+source('printTest.R', verbose = F)
+```
+
+```{r loadStuff, echo = F, include=F}
+
+
+
+library(ggplot2)
+
+
+
+library(texreg)
+# library(xtable)
+
+
+# http://yihui.name/printr/
+# https://github.com/yihui/printr
+# install.packages(
+#   'printr',
+#   type = 'source',
+#   repos = c('http://yihui.name/xran', 'http://cran.rstudio.com')
+# )
+library(printr)
+summary(cars)
+```
+
+
+
+
+
+
+
+
+
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+
+
+```{r, echo=T}
+x <- seq(1, 10, 1)
+```
+
+
+
+
+
+
+
+
+
+
+```{r fig_cars, echo=FALSE, fig.cap=figM$cap("fig_cars", "Here you see some interesting stuff about cars and such."), fig.align='center'}
+plot(cars)
+```
+
+
+
+```{r tab1, echo=FALSE, fig.cap=tabM$cap("tab1", "Here you see some interesting stuff about cars and such."), fig.align='center'}
+# plot(cars)
+# library(texreg)
+# htmlreg(table(rbinom(10, 1, .5)))
+
+table(rbinom(10, 1, .5))
+
+
+```
+
+
+
+```{r tab2, echo=FALSE, fig.cap=tabM$cap("tab2", "Here you see some interesting stuff about cars and such."), fig.align='center'}
+
+t1 <- table(rbinom(10, 1, .5))
+
+library(xtable)
+# fm3.table <- xtable(glm.fit)
+fm3.table <- xtable(t1)
+# Coefficients
+print(fm3.table, type = "html")
+```
+
+
+
+```{r tab3, echo=FALSE, fig.cap=tabM$cap("tab3", "Here you see some interesting stuff about cars and such."), fig.align='center'}
+plot(cars)
+```
+
+
+
+
+
+```{r fig_cars2, echo=FALSE, fig.cap=figM$cap("fig_cars2", "Here you see some interesting stuff about cars and such."), fig.align='center'}
+plot(cars)
+```
+
+
+
+
+
+
+
+```{r}
+help.search('contourplot')
+```
+
+
+
+## Referencing to figure or table {#identifier .class1 .class2 key=value key=value}
+What you always wanted to know about cars is shown in table `r tabM$ref("tab1")` or figure `r figM$ref("fig_cars2")`
+
+
+## Tables
+### GLM output
+```{r echo=T}
+cuse <- read.table("http://data.princeton.edu/wws509/datasets/cuse.dat", header=TRUE)
+lrfit <- glm( cbind(using, notUsing) ~ age + education + wantsMore , family = binomial, data=cuse)
+```
+
+#### no formatting
+
+
+```{r glm_fit, echo=FALSE, fig.cap=tabM$cap("glm_fit", "Output of glm."), fig.align='center'}
+lrfit
+```
+
+
+
+
+```{r glm_fit_summary, echo=FALSE, fig.cap=tabM$cap("glm_fit_summary", "Summary of glm output."), fig.align='center'}
+summary(lrfit)
+```
+
+
+
+
+
+
+
+
+
+
+
+#### texreg
+```{r glm_fit_texreg, echo=FALSE, results='asis'}
+htmlreg(lrfit,single.row=TRUE, caption = tabM$cap("glm_fit_texreg", "texreg table output."))
+```
+Looks good but not enough information.
+
+
+
+
+#### xtable
+```{r LvsN_glm, echo=FALSE, results="asis"}
+library(xtable)
+fm3.table <- xtable(lrfit, caption = tabM$cap("LvsN_glm","xtable output."))
+
+# Coefficients
+print(fm3.table, type = "html")
+
+# Analysis of variance.
+# print(xtable(anova(lrfit)), type = "html")
+```
+
+Requires some css code to make it look nice.
+
+
+#### ktable
+```{r LvsN_glm2, echo=FALSE}
+library(xtable)
+lrfit.table <- xtable(lrfit)
+
+knitr::kable(lrfit.table,
+             digits = 2,
+             caption = tabM$cap("LvsN_glm2","ktable output."))
+
+##
+```
+
+
+Probably the best off the shelf solution.
+
+
+
+
+
+
+## Tests
+
+
+
+
+
+
+When considering all the coefficients from our glm we observe that none of them are significant (all p > `r paste(pBiggerThan(summary(lrfit)$coefficients[-1,4]))`). 
+
+
+
+
+
+
+```{r}
+x <- rnorm(100, 110, 10)
+y <- x+rnorm(100, 10, 10)
+
+cxy <- cor.test(x,y)
+txy <- t.test(x,y, paired = T)
+```
+
+We observe that the average value of x was `r paste(print_sem(x))` and the average of y was `r paste(print_sem(x))`. This difference was not significant `r paste( print.t.test(txy, units="ms"))`.
+
+
+We observed however a significant correlation between x and y `r paste(print.cor.test(cxy))`.
+
+
+
+## PCA
+
+
+```{r pca_tab1, echo=FALSE, results='asisi'}
+
+
+# create some data for the pca
+nSubj <- 200
+nVar <- 21
+varNames <- paste0("Variable.", 1:nVar) # can't contain spaces
+
+X <- as.data.frame(matrix(rnorm(nSubj*nVar), nSubj, nVar))
+names(X) <- varNames
+
+
+
+# run the pca with varimax:
+library(psych)
+
+pc <- principal(X, nfactors = 7, rotate = "varimax")
+
+# work on the output:
+
+
+
+
+pc.table <- principal.print(pc)
+
+
+
+# pc.table
+
+# tt <- pc.table
+# typeof(pc.table)
+# tt[2] <- gsub("@b", "\textbf{", tt[2])
+
+
+knitr::kable(pc.table,
+             digits = 2, 
+                caption = tabM$cap("pca_table","Loadings from the PCA (7 factors + varimax rotation). Explanations on the variables: Ufov.BiasForCenter = performance on center – performance on periphery; the higher the score on BiasForCenter the better your performance on the central task relative to the peripheral task.") 
+             )
+
+
+# remove variables below a certain value.
+
+
+
+# ?strsplit
+# paste(pc.out[5], pc.out[6], sep = '\\')
+
+
+
+
+# # function to remove multiple spaces
+# trim <- function(x) return(gsub("^ *|(?<= ) | *$", "", x, perl=T))
+# 
+# # replace space by " & "
+# tt <- trim(pc.out[5])
+# gsub(" ", " & ", tt)
+# 
+# 
+# t0 <- paste0('\begin{table}[ht]
+# \centering
+# \begin{tabular}{', paste0(rep('r', 8), collapse = ''),'}\hline')
+# 
+# # remove more than 1 spaces
+# 
+# 
+# aa <- gregexpr("  ", pc.out[5])
+# aa[[1]]
+# 
+# 
+# ttt <- c('\begin{table}[ht]
+# \centering
+# \begin{tabular}{rrrrr}
+#   \hline
+#  & Estimate & Std. Error & z value & Pr($>$$|$z$|$) \\ 
+#   \hline
+# (Intercept) & -0.3120 & 0.0888 & -3.52 & 0.0004 \\ 
+#   motivation & 0.0287 & 0.0887 & 0.32 & 0.7465 \\ 
+#   intrusion & -0.1147 & 0.0886 & -1.30 & 0.1952 \\ 
+#   VSability & 0.1419 & 0.0886 & 1.60 & 0.1092 \\ 
+#   genderCov & 0.0053 & 0.0876 & 0.06 & 0.9519 \\ 
+#   brainState & 0.2393 & 0.0919 & 2.60 & 0.0092 \\ 
+#   eduCoCo & 0.2225 & 0.0910 & 2.44 & 0.0145 \\ 
+#   singleTasking & -0.0004 & 0.0874 & -0.00 & 0.9962 \\ 
+#    \hline
+# \end{tabular}
+# \end{table}')
+
+
+
+
+
+```
+
+
+
+## Beta regression:
+
+
+```{r}
+
+# generate data
+# x <- seq(from=0.01, to = 0.99, len = 100)
+# y <- dbeta(x, 10, 10)
+# plot(x,y, type  = 'l')
+# y <- dbeta(x, 20, 10)
+# plot(x,y, type  = 'l')
+
+
+X1 <- rnorm(100)
+X2 <- rnorm(100)
+
+S <- 2*X1 + 3 * X2
+S <- S - min(S)
+
+y <- rbeta(length(S), shape1 = S, shape2 = 10)
+if (any(y==0) | any(y==1)) y <- prior.beta(y)
+tmp <- data.frame(y, X1, X2)
+
+
+library(betareg)
+
+beta.fit <- betareg(y~., link="probit", data=tmp)
+
+beta.table <- beta.print(beta.fit)
+
+
+knitr::kable(beta.table, 
+             digits = 2, 
+                caption = tabM$cap("beta_table","Coeffs from beta regression.") 
+             )
+
+
+
+```
+
+
+
