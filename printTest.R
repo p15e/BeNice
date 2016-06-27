@@ -107,11 +107,13 @@ pBiggerThan <- function(pvalues, ndigits = 2){
 trim <- function(x) return(gsub("^ *|(?<= ) | *$", "", x, perl=T))
 
 
-principal2df <- function(pc){
-        nFactors <- pc$factors
-        nVar <- length(pc$values)
+principal2df <- function(X, varNames = NA){
         
-        pc.out <- capture.output(pc)
+        
+        nFactors <- X$factors
+        nVar <- length(X$values)
+        
+        pc.out <- capture.output(X)
         # 
         # pc.out[1]
         # suggest caption:
@@ -136,7 +138,12 @@ principal2df <- function(pc){
         data <- as.data.frame(data)
         
         df <- data[,1:nc.end]
-        names(df) <- c('', paste0('Comp.', 1:7))
+        if (is.na(varNames)){
+                varNames <- paste0('Comp.', 1:nFactors)
+        } else {
+                
+        }
+        names(df) <- c('', varNames)
         df
 }
 
@@ -175,7 +182,7 @@ principal.print <- function(pcdf, lowerValue=0.2, upperValue=.4){
         }
         
         # remove lower values
-        if (lowerValue > 0){
+        if (lowerValue >= 0){
                 coefValueCHR <- coefValues
                 coefValueCHR[abs(coefValues) < lowerValue] <- ''
         }
@@ -240,6 +247,54 @@ glm.table <- function(lm.fit, remove.intercept = T){
         xtable(aa)       
 }
 
+
+
+
+
+lr.table <- function(lr, ndigits = 2){
+        
+        # different number of digits for pvalues?
+        
+        # column width are inadequate.
+        
+        aa <- as.data.frame(lr)
+        # aa$stars <- ""
+        pv <- aa$`Pr(>Chisq)`
+        aa$stars <- p2stars(pv)
+        
+        # browser()
+        
+        vv <- pv[!is.na(pv)]
+        
+        if (any(vv < 0.001)){
+                pvc <- as.character(format(pv, scientific=T, digits = 2))
+        } else {
+                pvc <- as.character(format(pv, scientific=F, digits = ndigits))
+        }
+        
+        
+        
+        
+        pvc[is.na(pv)] <- ""
+        aa$`Pr(>Chisq)` <- pvc
+        
+        # round values
+        aa$LogLik <- round(aa$LogLik, ndigits)
+        aa$Chisq <- round(aa$Chisq,  ndigits)
+        aa[is.na(aa)] <- "" # converts all to text
+        aa
+        
+        names(aa) <- c("#param.", "LogLik", "df", "Chisq", "p", " ")
+        
+#         require(xtable)
+#         aa <- as.data.frame(summary(lm.fit)$coefficients)
+#         if (remove.intercept){
+#                 aa <- aa[-1,]
+#         }
+
+        
+        xtable(aa)       
+}
 
 
 
