@@ -14,7 +14,8 @@ Depends:
     WriteXLS,
     gridExtra,
     lubridate,
-    gtools
+    gtools,
+    plotrix
 Version: 0.02
 Date: 2016-03-29
 Authors@R: c(person("Pedro", "Cardoso-Leite", role = c("aut", "cre")),
